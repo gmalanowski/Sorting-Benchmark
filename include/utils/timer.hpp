@@ -1,0 +1,4 @@
+#ifndef PROJEKT_TIMER_HPP
+#define PROJEKT_TIMER_HPP
+
+#endif //PROJEKT_TIMER_HPP
