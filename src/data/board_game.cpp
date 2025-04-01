@@ -1,4 +1,4 @@
-#include "../../include/data/board_game.hpp"
+#include "data/board_game.hpp"
 #include <cstring>
 
 // Constructor initializing all fields

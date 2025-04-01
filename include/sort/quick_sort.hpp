@@ -1,7 +1,7 @@
 #ifndef PROJEKT_QUICK_SORT_HPP
 #define PROJEKT_QUICK_SORT_HPP
 
-#include "../data/dynamic_array.hpp"
+#include "data/dynamic_array.hpp"
 #include "sort_algorithm.hpp"
 
 template<typename T>

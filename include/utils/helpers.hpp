@@ -2,7 +2,7 @@
 #define PROJEKT_HELPERS_HPP
 
 #include <string>
-#include "../data/dynamic_array.hpp"
+#include "data/dynamic_array.hpp"
 
 void printHelp();
 template <typename T>

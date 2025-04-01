@@ -1,4 +1,4 @@
-#include "../../include/sort/quick_sort.hpp"
+#include "sort/quick_sort.hpp"
 
 template<typename T>
 void QuickSort<T>::sort(DynamicArray<T>& data) {

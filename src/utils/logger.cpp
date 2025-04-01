@@ -1,4 +1,4 @@
-#include "../../include/utils/logger.hpp"
+#include "utils/logger.hpp"
 #include <iostream>
 
 void Logger::log(Level level, const std::string& message) {

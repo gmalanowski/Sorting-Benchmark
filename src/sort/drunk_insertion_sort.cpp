@@ -1,4 +1,4 @@
-#include "../../include/sort/drunk_insertion_sort.hpp"
+#include "sort/drunk_insertion_sort.hpp"
 
 template<typename T>
 void DrunkInsertionSort<T>::sort(DynamicArray<T>& data) {

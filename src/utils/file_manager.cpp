@@ -1,5 +1,5 @@
-#include "../../include/utils/file_manager.hpp"
-#include "../../include/data/board_game.hpp"
+#include "utils/file_manager.hpp"
+#include "data/board_game.hpp"
 #include <fstream>
 
 template<typename T>

@@ -1,4 +1,4 @@
-#include "../../include/sort/sort_factory.hpp"
+#include "sort/sort_factory.hpp"
 
 template<typename T>
 std::unique_ptr<SortAlgorithm<T>> SortFactory<T>::createSorter(SortAlgorithmType algorithm) {

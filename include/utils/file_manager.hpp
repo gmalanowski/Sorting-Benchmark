@@ -2,7 +2,7 @@
 #define PROJEKT_FILE_MANAGER_HPP
 
 #include <string>
-#include "../data/dynamic_array.hpp"
+#include "data/dynamic_array.hpp"
 
 class FileManager {
 public:

@@ -1,4 +1,4 @@
-#include "../../include/sort/insertion_sort.hpp"
+#include "sort/insertion_sort.hpp"
 
 template<typename T>
 void InsertionSort<T>::sort(DynamicArray<T>& data) {

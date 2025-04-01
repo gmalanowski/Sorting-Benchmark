@@ -12,7 +12,6 @@ public:
     int result(); // Return elapsed time [ms].
 
 private:
-    // Everything else you need, both fields and methods.
     std::chrono::time_point<std::chrono::high_resolution_clock> startTime;
     bool running;
     int elapsedTime; // in milliseconds

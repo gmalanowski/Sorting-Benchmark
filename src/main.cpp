@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
-#include "../include/utils/helpers.hpp"
-#include "../include/utils/logger.hpp"
-#include "../include/data/board_game.hpp"
+#include "utils/helpers.hpp"
+#include "utils/logger.hpp"
+#include "data/board_game.hpp"
 
 int main(int argc, char* argv[]) {
     Logger::log(Logger::Level::INFO, "Program started");

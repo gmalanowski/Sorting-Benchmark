@@ -1,13 +1,13 @@
-#include "../../include/utils/helpers.hpp"
-#include "../../include/utils/timer.hpp"
-#include "../../include/utils/file_manager.hpp"
-#include "../../include/utils/logger.hpp"
-#include "../../include/sort/heap_sort.hpp"
-#include "../../include/sort/insertion_sort.hpp"
-#include "../../include/sort/quick_sort.hpp"
-#include "../../include/sort/shell_sort.hpp"
-#include "../../include/sort/drunk_insertion_sort.hpp"
-#include "../../include/data/board_game.hpp"
+#include "utils/helpers.hpp"
+#include "utils/timer.hpp"
+#include "utils/file_manager.hpp"
+#include "utils/logger.hpp"
+#include "sort/heap_sort.hpp"
+#include "sort/insertion_sort.hpp"
+#include "sort/quick_sort.hpp"
+#include "sort/shell_sort.hpp"
+#include "sort/drunk_insertion_sort.hpp"
+#include "data/board_game.hpp"
 #include <iostream>
 
 void printHelp() {

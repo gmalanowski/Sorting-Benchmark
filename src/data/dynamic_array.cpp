@@ -1,5 +1,5 @@
-#include "../../include/data/dynamic_array.hpp"
-#include "../../include/data/board_game.hpp"
+#include "data/dynamic_array.hpp"
+#include "data/board_game.hpp"
 
 template<typename T>
 DynamicArray<T>::DynamicArray() : data(nullptr), capacity(0), length(0) {}

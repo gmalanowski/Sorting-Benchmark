@@ -1,4 +1,4 @@
-#include "../../include/sort/shell_sort.hpp"
+#include "sort/shell_sort.hpp"
 
 template<typename T>
 void ShellSort<T>::sort(DynamicArray<T>& data) {

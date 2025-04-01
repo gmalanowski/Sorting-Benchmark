@@ -1,4 +1,4 @@
-#include "../../include/sort/heap_sort.hpp"
+#include "sort/heap_sort.hpp"
 
 template<typename T>
 void HeapSort<T>::sort(DynamicArray<T>& data) {
