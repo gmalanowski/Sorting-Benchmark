@@ -1,14 +1,17 @@
 #include "data/dynamic_array.hpp"
 #include "data/board_game.hpp"
 
+// Default constructor initializing an empty DynamicArray
 template<typename T>
 DynamicArray<T>::DynamicArray() : data(nullptr), capacity(0), length(0) {}
 
+// Destructor to clean up allocated memory
 template<typename T>
 DynamicArray<T>::~DynamicArray() {
     delete[] data;
 }
 
+// Method to add an element to the end of the array
 template<typename T>
 void DynamicArray<T>::push_back(const T& value) {
     if (length == capacity) {
@@ -17,6 +20,7 @@ void DynamicArray<T>::push_back(const T& value) {
     data[length++] = value;
 }
 
+// Method to remove the last element of the array
 template<typename T>
 void DynamicArray<T>::pop_back() {
     if (length == 0) {
@@ -25,6 +29,7 @@ void DynamicArray<T>::pop_back() {
     --length;
 }
 
+// Operator to access an element by index
 template<typename T>
 T& DynamicArray<T>::operator[](std::size_t index) {
     if (index >= length) {
@@ -33,6 +38,7 @@ T& DynamicArray<T>::operator[](std::size_t index) {
     return data[index];
 }
 
+// Const version of the operator to access an element by index
 template<typename T>
 const T& DynamicArray<T>::operator[](std::size_t index) const {
     if (index >= length) {
@@ -41,16 +47,19 @@ const T& DynamicArray<T>::operator[](std::size_t index) const {
     return data[index];
 }
 
+// Method to get the current size of the array
 template<typename T>
 std::size_t DynamicArray<T>::size() const {
     return length;
 }
 
+// Method to check if the array is empty
 template<typename T>
 bool DynamicArray<T>::empty() const {
     return length == 0;
 }
 
+// Method to resize the array to a new capacity
 template<typename T>
 void DynamicArray<T>::resize(std::size_t new_capacity) {
     T* new_data = new T[new_capacity];
@@ -62,6 +71,7 @@ void DynamicArray<T>::resize(std::size_t new_capacity) {
     capacity = new_capacity;
 }
 
+// Function to check if the array is sorted
 template<typename T>
 bool isSorted(const DynamicArray<T>& data) {
     for (std::size_t i = 1; i < data.size(); ++i) {
@@ -72,7 +82,7 @@ bool isSorted(const DynamicArray<T>& data) {
     return true;
 }
 
-// Explicit instantiation
+// Explicit instantiation of DynamicArray and isSorted for specific types
 template class DynamicArray<int>;
 template class DynamicArray<float>;
 template class DynamicArray<double>;

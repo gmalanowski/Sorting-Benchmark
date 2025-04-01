@@ -9,6 +9,7 @@
 #include <memory>
 #include <stdexcept>
 
+// Enum class for different types of sorting algorithms
 enum class SortAlgorithmType {
     HEAP,
     INSERTION,
@@ -17,9 +18,11 @@ enum class SortAlgorithmType {
     DRUNK_INSERTION
 };
 
+// Template class for SortFactory
 template<typename T>
 class SortFactory {
 public:
+    // Static method to create a sorter based on the algorithm type
     static std::unique_ptr<SortAlgorithm<T>> createSorter(SortAlgorithmType algorithm);
 };
 

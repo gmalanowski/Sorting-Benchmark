@@ -3,18 +3,19 @@
 
 #include <chrono>
 
+// Class for measuring elapsed time
 class Timer {
 public:
-    Timer(); // Initialize and prepare to start.
-    void reset(); // Reset timer.
-    int start(); // Start timer.
-    int stop(); // Stop timer.
-    int result(); // Return elapsed time [ms].
+    Timer(); // Constructor to initialize and prepare to start the timer.
+    void reset(); // Method to reset the timer.
+    int start(); // Method to start the timer.
+    int stop(); // Method to stop the timer.
+    int result(); // Method to return the elapsed time in milliseconds.
 
 private:
-    std::chrono::time_point<std::chrono::high_resolution_clock> startTime;
-    bool running;
-    int elapsedTime; // in milliseconds
+    std::chrono::time_point<std::chrono::high_resolution_clock> startTime; // Variable to store the start time.
+    bool running; // Flag to indicate if the timer is running.
+    int elapsedTime; // Variable to store the elapsed time in milliseconds.
 };
 
 #endif // PROJEKT_TIMER_HPP

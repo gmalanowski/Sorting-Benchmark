@@ -10,6 +10,7 @@
 #include "data/board_game.hpp"
 #include <iostream>
 
+// Function to print the help message
 void printHelp() {
     Logger::log(Logger::Level::INFO, "Displaying help message");
     std::cout << "FILE TEST MODE:\n"
@@ -32,6 +33,7 @@ void printHelp() {
               << "\tDisplays this help message.\n";
 }
 
+// Template function to sort data using the specified algorithm
 template <typename T>
 void sortData(int algorithm, DynamicArray<T>& data, int drunkenness) {
     Logger::log(Logger::Level::INFO, "Starting sortData function");
@@ -70,6 +72,7 @@ void sortData(int algorithm, DynamicArray<T>& data, int drunkenness) {
     }
 }
 
+// Template function to check if the data is sorted
 template <typename T>
 bool isSorted(const DynamicArray<T>& data) {
     Logger::log(Logger::Level::INFO, "Checking if data is sorted");
@@ -83,6 +86,7 @@ bool isSorted(const DynamicArray<T>& data) {
     return true;
 }
 
+// Template function to handle file mode operations
 template <typename T>
 void handleFileMode(int algorithm, const std::string& inputFile, const std::string& outputFile, int drunkenness) {
     Logger::log(Logger::Level::INFO, "Entering handleFileMode function");
@@ -119,6 +123,7 @@ void handleFileMode(int algorithm, const std::string& inputFile, const std::stri
     delete data;
 }
 
+// Template function to handle test mode operations
 template <typename T>
 void handleTestMode(int algorithm, size_t size, const std::string& outputFile, int drunkenness) {
     Logger::log(Logger::Level::INFO, "Entering handleTestMode function");

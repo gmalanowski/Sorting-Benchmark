@@ -3,14 +3,17 @@
 
 #include <string>
 
+// Logger class for logging messages with different severity levels
 class Logger {
 public:
+    // Enum class for log levels
     enum class Level {
-        INFO,
-        WARNING,
-        ERROR
+        INFO,       // Informational messages
+        WARNING,    // Warning messages
+        ERROR       // Error messages
     };
 
+    // Static method to log a message with a specified log level
     static void log(Level level, const std::string& message);
 };
 
