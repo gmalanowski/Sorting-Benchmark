@@ -16,7 +16,7 @@ SIZES=(10000 20000 40000 80000 160000)
 DISTRIBUTIONS=("random" "sorted_desc" "sorted_asc" "partially_sorted_33" "partially_sorted_66")
 
 # Log file
-LOG_FILE="studies.log"
+LOG_FILE="./debug/studies.log"
 
 # Clear the log file
 > $LOG_FILE
@@ -111,9 +111,6 @@ for gap in {1..5}; do
     done
 done
 
-echo "Best pivot for QuickSort: $best_quick_sort_pivot"
-echo "Best gap for ShellSort: $best_shell_gap"
-
 # Run studies
 run_study_1
 run_study_2
@@ -121,5 +118,8 @@ run_study_3
 run_study_1_drunk
 run_study_1_shell
 run_study_1_quick
+
+echo "Best pivot for QuickSort: $best_quick_sort_pivot"
+echo "Best gap for ShellSort: $best_shell_gap"
 
 echo "All studies completed." | tee -a $LOG_FILE
