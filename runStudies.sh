@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Path to the program
-PROGRAM="../bin/sorter"
+PROGRAM="./bin/sorter"
 
 # Sorting algorithms
 ALGORITHMS=("HEAP" "INSERTION" "QUICK" "SHELL" "DRUNK_INSERTION")
@@ -26,7 +26,7 @@ run_study_1() {
     for algorithm in "${!ALGORITHMS[@]}"; do
         for size in "${SIZES[@]}"; do
             echo "Running study 1: Algorithm=${ALGORITHMS[$algorithm]}, Size=$size" | tee -a $LOG_FILE
-            $PROGRAM --test $algorithm 0 $size "debug/output_${ALGORITHMS[$algorithm]}_${size}.txt" 2>&1 | tee -a $LOG_FILE
+            $PROGRAM --test $algorithm 0 $size "output_${ALGORITHMS[$algorithm]}_${size}.txt" 2>&1 | tee -a $LOG_FILE
         done
     done
 }
