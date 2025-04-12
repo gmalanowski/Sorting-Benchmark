@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Path to the program
-PROGRAM="./bin/sorter"
+PROGRAM="../bin/sorter"
 
 # Sorting algorithms
 ALGORITHMS=("HEAP" "INSERTION" "QUICK" "SHELL" "DRUNK_INSERTION")
@@ -16,7 +16,7 @@ SIZES=(10000 20000 40000 80000 160000)
 DISTRIBUTIONS=("random" "sorted_desc" "sorted_asc" "partially_sorted_33" "partially_sorted_66")
 
 # Log file
-LOG_FILE="./debug/studies.log"
+LOG_FILE="./studies.log"
 
 # Clear the log file
 > $LOG_FILE
@@ -36,7 +36,7 @@ run_study_2() {
     for algorithm in "${!ALGORITHMS[@]}"; do
         for distribution in "${DISTRIBUTIONS[@]}"; do
             echo "Running study 2: Algorithm=${ALGORITHMS[$algorithm]}, Distribution=$distribution" | tee -a $LOG_FILE
-            $PROGRAM --test $algorithm 0 10000 "debug/output_${ALGORITHMS[$algorithm]}_${distribution}.txt" 2>&1 | tee -a $LOG_FILE
+            $PROGRAM --test $algorithm 0 10000 "output_${ALGORITHMS[$algorithm]}_${distribution}.txt" 2>&1 | tee -a $LOG_FILE
         done
     done
 }
@@ -46,7 +46,7 @@ run_study_3() {
     selected_algorithm=2 # Index for QUICK algorithm
     for type in "${!TYPES[@]}"; do
         echo "Running study 3: Algorithm=${ALGORITHMS[$selected_algorithm]}, Type=${TYPES[$type]}" | tee -a $LOG_FILE
-        $PROGRAM --test $selected_algorithm $type 10000 "debug/output_${ALGORITHMS[$selected_algorithm]}_${TYPES[$type]}.txt" 2>&1 | tee -a $LOG_FILE
+        $PROGRAM --test $selected_algorithm $type 10000 "output_${ALGORITHMS[$selected_algorithm]}_${TYPES[$type]}.txt" 2>&1 | tee -a $LOG_FILE
     done
 }
 
@@ -61,7 +61,7 @@ PIVOTS=("LEFT" "RIGHT" "MIDDLE" "RANDOM")
 run_study_1_drunk() {
     for drunkenness in 0 25 50 75 100; do
         echo "Running DrunkInsertionSort with drunkenness=$drunkenness" | tee -a $LOG_FILE
-        $PROGRAM --test 4 0 10000 "debug/output_drunk_${drunkenness}.txt" $drunkenness
+        $PROGRAM --test 4 0 10000 "output_drunk_${drunkenness}.txt" $drunkenness
     done
 }
 
@@ -69,7 +69,7 @@ run_study_1_drunk() {
 run_study_1_shell() {
     for gaps in "${GAPS1[@]}" "${GAPS2[@]}"; do
         echo "Running ShellSort with gaps=${gaps}" | tee -a $LOG_FILE
-        $PROGRAM --test 3 0 10000 "debug/output_shell_${gaps}.txt" $gaps
+        $PROGRAM --test 3 0 10000 "output_shell_${gaps}.txt" $gaps
     done
 }
 
@@ -78,7 +78,7 @@ run_study_1_quick() {
     for pivot in "${PIVOTS[@]}"; do
         for size in "${SIZES[@]}"; do
             echo "Running QuickSort with pivot=${pivot}, size=${size}" | tee -a $LOG_FILE
-            $PROGRAM --test 2 0 ${size} "debug/output_quick_${pivot}_${size}.txt" $pivot
+            $PROGRAM --test 2 0 ${size} "output_quick_${pivot}_${size}.txt" $pivot
         done
     done
 }
@@ -101,7 +101,7 @@ run_study_1_quick
 prepare_study_2_quick() {
     for pivot in LEFT RIGHT MIDDLE RANDOM; do
       for size in "${SIZES[@]}"; do
-          time=$(grep "Average time" "debug/time_quick_${pivot}_${size}.txt" | awk '{print $3}')
+          time=$(grep "Average time" "time_quick_${pivot}_${size}.txt" | awk '{print $3}')
           if (( $(echo "$time < $min_time_quick_sort" | bc -l) )); then
               min_time_quick_sort=$time
               best_quick_sort_pivot=$pivot
@@ -114,7 +114,7 @@ prepare_study_2_quick() {
 prepare_study_2_shell() {
     for gap in {1..5}; do
         for size in "${SIZES[@]}"; do
-            time=$(grep "Average time" "debug/output_shell_${gap}_${size}.txt" | awk '{print $3}')
+            time=$(grep "Average time" "output_shell_${gap}_${size}.txt" | awk '{print $3}')
             if (( $(echo "$time < $min_time_shell" | bc -l) )); then
                 min_time_shell=$time
                 best_shell_gap=$gap
