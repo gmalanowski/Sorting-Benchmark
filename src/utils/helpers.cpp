@@ -1,13 +1,15 @@
-#include "utils/helpers.hpp"
-#include "utils/timer.hpp"
-#include "utils/file_manager.hpp"
-#include "utils/logger.hpp"
-#include "sort/heap_sort.hpp"
-#include "sort/insertion_sort.hpp"
-#include "sort/quick_sort.hpp"
-#include "sort/shell_sort.hpp"
-#include "sort/drunk_insertion_sort.hpp"
-#include "data/board_game.hpp"
+#include "utils/helpers.h"
+#include "utils/Timer.h"
+#include "utils/file_manager.h"
+#include "utils/logger.h"
+#include "sort_factory.h"
+#include "sort/heap_sort.h"
+#include "sort/insertion_sort.h"
+#include "sort/quick_sort.h"
+#include "sort/shell_sort.h"
+#include "sort/drunk_insertion_sort.h"
+#include "data/board_game.h"
+#include <cstring>
 #include <iostream>
 
 // Function to print the help message
@@ -15,60 +17,73 @@ void printHelp() {
     Logger::log(Logger::Level::INFO, "Displaying help message");
     std::cout << "FILE TEST MODE:\n"
               << "\tUsage:\n"
-              << "\t\t./sorter --file <algorithm> <type> <inputFile> [outputFile]\n"
+              << "\t\t./sorter --file <algorithm> <type> <inputFile> [outputFile] [option]\n"
               << "\t<algorithm>\t Sorting algorithm to use (e.g., 0 - Heap, 1 - Insertion, 2 - Quick, 3 - Shell, 4 - Drunk Insertion).\n"
               << "\t<type>\t Data type to load (e.g., 0 - int, 1 - float, 2 - double, 3 - char, 4 - BoardGame).\n"
               << "\t<inputFile>\t Input file containing the data to be sorted.\n"
               << "\t[outputFile]\t If provided, the sorted values will be saved to this file.\n"
+              << "\t[option]\t Optional parameter: drunkenness level for Drunk Insertion Sort (0 - 100), gaps for Shell Sort (0 - 10), pivot type for Quick Sort.\n"
               << "BENCHMARK MODE:\n"
               << "\tUsage:\n"
-              << "\t\t./sorter --test <algorithm> <type> <size> <outputFile>\n"
+              << "\t\t./sorter --test <algorithm> <type> <size> <outputFile> [option]\n"
               << "\t<algorithm>\t Sorting algorithm to use (e.g., 0 - Heap, 1 - Insertion, 2 - Quick, 3 - Shell, 4 - Drunk Insertion).\n"
               << "\t<type>\t Data type to generate (e.g., 0 - int, 1 - float, 2 - double, 3 - char, 4 - BoardGame).\n"
               << "\t<size>\t Number of elements to generate (instance size).\n"
               << "\t<outputFile>\t File where the benchmark results should be saved.\n"
+              << "\t[option]\t Optional parameter: drunkenness level for Drunk Insertion Sort (0 - 100), gaps for Shell Sort (0 - 10), pivot type for Quick Sort.\n"
               << "HELP MODE:\n"
               << "\tUsage:\n"
-              << "\t\t./YourProject --help\n"
+              << "\t\t./sorter --help\n"
               << "\tDisplays this help message.\n";
 }
 
 // Template function to sort data using the specified algorithm
 template <typename T>
-void sortData(int algorithm, DynamicArray<T>& data, int drunkenness) {
+void sortData(int algorithm, DynamicArray<T>& data, int optional) {
     Logger::log(Logger::Level::INFO, "Starting sortData function");
 
-    HeapSort<T> heapSort;
-    InsertionSort<T> insertionSort;
-    QuickSort<T> quickSort;
-    ShellSort<T> shellSort;
-    DrunkInsertionSort<T> drunkInsertionSort;
-
+    // Mapping algorithm number to SortAlgorithmType
+    SortAlgorithmType algorithmType;
     switch (algorithm) {
         case 0:
-            Logger::log(Logger::Level::INFO, "Using HeapSort");
-            heapSort.sort(data);
+            algorithmType = SortAlgorithmType::HEAP;
             break;
         case 1:
-            Logger::log(Logger::Level::INFO, "Using InsertionSort");
-            insertionSort.sort(data);
+            algorithmType = SortAlgorithmType::INSERTION;
             break;
         case 2:
-            Logger::log(Logger::Level::INFO, "Using QuickSort");
-            quickSort.sort(data);
+            algorithmType = SortAlgorithmType::QUICK;
             break;
         case 3:
-            Logger::log(Logger::Level::INFO, "Using ShellSort");
-            shellSort.sort(data);
+            algorithmType = SortAlgorithmType::SHELL;
             break;
         case 4:
-            Logger::log(Logger::Level::INFO, "Using DrunkInsertionSort");
-            drunkInsertionSort.sort(data, drunkenness);
+            algorithmType = SortAlgorithmType::DRUNK_INSERTION;
             break;
         default:
-            Logger::log(Logger::Level::ERROR, "Unknown algorithm: " + std::to_string(algorithm));
-            std::cerr << "Unknown algorithm: " << algorithm << std::endl;
+            Logger::log(Logger::Level::ERROR, ("Unknown algorithm: " + std::to_string(algorithm)).c_str());
             exit(1);
+    }
+
+    // Creating a sorter using SortFactory
+    auto sorter = SortFactory<T>::createSorter(algorithmType);
+
+    // If the algorithm is DrunkInsertionSort, pass the "drunkenness" level
+    if (algorithmType == SortAlgorithmType::DRUNK_INSERTION) {
+        dynamic_cast<DrunkInsertionSort<T>*>(sorter.get())->sort(data, optional);
+    } else if (algorithmType == SortAlgorithmType::SHELL) {
+        // If the algorithm is ShellSort, pass the gaps
+        DynamicArray<std::size_t> gaps;
+        for (int i = 0; i < optional; ++i) {
+            gaps.push_back(i + 1);
+        }
+        dynamic_cast<ShellSort<T>*>(sorter.get())->sort(data, gaps);
+    } else if (algorithmType == SortAlgorithmType::QUICK) {
+        // If the algorithm is QuickSort, pass the pivot type
+        PivotType pivotType = static_cast<PivotType>(optional);
+        dynamic_cast<QuickSort<T>*>(sorter.get())->sort(data, pivotType);
+    } else {
+        sorter->sort(data);
     }
 }
 
@@ -88,34 +103,29 @@ bool isSorted(const DynamicArray<T>& data) {
 
 // Template function to handle file mode operations
 template <typename T>
-void handleFileMode(int algorithm, const std::string& inputFile, const std::string& outputFile, int drunkenness) {
+void handleFileMode(int algorithm, const char* inputFile, const char* outputFile, int optional) {
     Logger::log(Logger::Level::INFO, "Entering handleFileMode function");
     auto data = new DynamicArray<T>();
     if (!FileManager::readFromFile(inputFile, *data)) {
-        Logger::log(Logger::Level::ERROR, "Failed to read from file: " + inputFile);
-        std::cerr << "Failed to read from file: " << inputFile << std::endl;
         delete data;
         exit(1);
     }
 
     Timer timer;
     timer.start();
-    sortData(algorithm, *data, drunkenness);
+    sortData(algorithm, *data, optional);
     timer.stop();
 
-    Logger::log(Logger::Level::INFO, "Elapsed time: " + std::to_string(timer.result()) + " ms");
+    Logger::log(Logger::Level::INFO, ("Elapsed time: " + std::to_string(timer.result()) + " ms").c_str());
     std::cout << "Elapsed time: " << timer.result() << " ms" << std::endl;
 
     if (!isSorted(*data)) {
         Logger::log(Logger::Level::ERROR, "Sorting failed: data is not sorted correctly");
-        std::cerr << "Sorting failed: data is not sorted correctly." << std::endl;
         delete data;
         exit(1);
     }
 
-    if (!outputFile.empty() && !FileManager::writeToFile(outputFile, *data)) {
-        Logger::log(Logger::Level::ERROR, "Failed to write to file: " + outputFile);
-        std::cerr << "Failed to write to file: " << outputFile << std::endl;
+    if (outputFile && std::strlen(outputFile) > 0 && !FileManager::writeToFile(outputFile, *data)) {
         delete data;
         exit(1);
     }
@@ -125,64 +135,84 @@ void handleFileMode(int algorithm, const std::string& inputFile, const std::stri
 
 // Template function to handle test mode operations
 template <typename T>
-void handleTestMode(int algorithm, size_t size, const std::string& outputFile, int drunkenness) {
+void handleTestMode(int algorithm, size_t size, const char* outputFile, int optional) {
     Logger::log(Logger::Level::INFO, "Entering handleTestMode function");
-    auto data = new DynamicArray<T>();
-    for (size_t i = 0; i < size; ++i) {
-        if constexpr (std::is_same_v<T, char>) {
-            data->push_back('a' + rand() % 26);
-        } else {
-            data->push_back(static_cast<T>(rand() % 10000));
+
+    const int iterations = 100;
+    DynamicArray<int> times;
+
+    for (int i = 0; i < iterations; ++i) {
+        auto data = new DynamicArray<T>();
+        for (size_t j = 0; j < size; ++j) {
+            if constexpr (std::is_same_v<T, char>) {
+                data->push_back('a' + rand() % 26);
+            } else {
+                data->push_back(static_cast<T>(rand() % 10000));
+            }
         }
+
+        Timer timer;
+        timer.start();
+        sortData(algorithm, *data, optional);
+        timer.stop();
+
+        if (!isSorted(*data)) {
+            Logger::log(Logger::Level::ERROR, "Sorting failed: data is not sorted correctly");
+            delete data;
+            exit(1);
+        }
+
+        times.push_back(timer.result());
+        if (outputFile && std::strlen(outputFile) > 0 && !FileManager::writeToFile(outputFile, *data)) {
+            delete data;
+            exit(1);
+        }
+
+        delete data;
     }
 
-    Timer timer;
-    timer.start();
-    sortData(algorithm, *data, drunkenness);
-    timer.stop();
+    int minTime = *std::min_element(times.begin(), times.end());
+    int maxTime = *std::max_element(times.begin(), times.end());
+    double avgTime = std::accumulate(times.begin(), times.end(), 0.0) / times.size();
 
-    Logger::log(Logger::Level::INFO, "Elapsed time: " + std::to_string(timer.result()) + " ms");
-    std::cout << "Elapsed time: " << timer.result() << " ms" << std::endl;
+    char timeFileName[256];
+    std::snprintf(timeFileName, sizeof(timeFileName), "time_%s", outputFile);
+    std::ofstream file(timeFileName);
 
-    if (!isSorted(*data)) {
-        Logger::log(Logger::Level::ERROR, "Sorting failed: data is not sorted correctly");
-        std::cerr << "Sorting failed: data is not sorted correctly." << std::endl;
-        delete data;
+    if (file.is_open()) {
+        file << "Average time: " << avgTime << " ms\n";
+        file << "Minimum time: " << minTime << " ms\n";
+        file << "Maximum time: " << maxTime << " ms\n";
+        file.close();
+    } else {
         exit(1);
     }
 
-    if (!FileManager::writeToFile(outputFile, *data)) {
-        Logger::log(Logger::Level::ERROR, "Failed to write to file: " + outputFile);
-        std::cerr << "Failed to write to file: " << outputFile << std::endl;
-        delete data;
-        exit(1);
-    }
-
-    delete data;
+    Logger::log(Logger::Level::INFO, "Test mode completed successfully");
 }
 
 // Explicit template instantiation
-template void sortData<int>(int algorithm, DynamicArray<int>& data, int drunkenness);
+template void sortData<int>(int algorithm, DynamicArray<int>& data, int optional);
 template bool isSorted<int>(const DynamicArray<int>& data);
-template void handleFileMode<int>(int algorithm, const std::string& inputFile, const std::string& outputFile, int drunkenness);
-template void handleTestMode<int>(int algorithm, size_t size, const std::string& outputFile, int drunkenness);
+template void handleFileMode<int>(int algorithm, const char* inputFile, const char* outputFile, int optional);
+template void handleTestMode<int>(int algorithm, size_t size, const char* outputFile, int optional);
 
-template void sortData<float>(int algorithm, DynamicArray<float>& data, int drunkenness);
+template void sortData<float>(int algorithm, DynamicArray<float>& data, int optional);
 template bool isSorted<float>(const DynamicArray<float>& data);
-template void handleFileMode<float>(int algorithm, const std::string& inputFile, const std::string& outputFile, int drunkenness);
-template void handleTestMode<float>(int algorithm, size_t size, const std::string& outputFile, int drunkenness);
+template void handleFileMode<float>(int algorithm, const char* inputFile, const char* outputFile, int optional);
+template void handleTestMode<float>(int algorithm, size_t size, const char* outputFile, int optional);
 
-template void sortData<double>(int algorithm, DynamicArray<double>& data, int drunkenness);
+template void sortData<double>(int algorithm, DynamicArray<double>& data, int optional);
 template bool isSorted<double>(const DynamicArray<double>& data);
-template void handleFileMode<double>(int algorithm, const std::string& inputFile, const std::string& outputFile, int drunkenness);
-template void handleTestMode<double>(int algorithm, size_t size, const std::string& outputFile, int drunkenness);
+template void handleFileMode<double>(int algorithm, const char* inputFile, const char* outputFile, int optional);
+template void handleTestMode<double>(int algorithm, size_t size, const char* outputFile, int optional);
 
-template void sortData<char>(int algorithm, DynamicArray<char>& data, int drunkenness);
+template void sortData<char>(int algorithm, DynamicArray<char>& data, int optional);
 template bool isSorted<char>(const DynamicArray<char>& data);
-template void handleFileMode<char>(int algorithm, const std::string& inputFile, const std::string& outputFile, int drunkenness);
-template void handleTestMode<char>(int algorithm, size_t size, const std::string& outputFile, int drunkenness);
+template void handleFileMode<char>(int algorithm, const char* inputFile, const char* outputFile, int optional);
+template void handleTestMode<char>(int algorithm, size_t size, const char* outputFile, int optional);
 
-template void sortData<BoardGame>(int algorithm, DynamicArray<BoardGame>& data, int drunkenness);
+template void sortData<BoardGame>(int algorithm, DynamicArray<BoardGame>& data, int optional);
 template bool isSorted<BoardGame>(const DynamicArray<BoardGame>& data);
-template void handleFileMode<BoardGame>(int algorithm, const std::string& inputFile, const std::string& outputFile, int drunkenness);
-template void handleTestMode<BoardGame>(int algorithm, size_t size, const std::string& outputFile, int drunkenness);
+template void handleFileMode<BoardGame>(int algorithm, const char* inputFile, const char* outputFile, int optional);
+template void handleTestMode<BoardGame>(int algorithm, size_t size, const char* outputFile, int optional);

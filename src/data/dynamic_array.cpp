@@ -1,5 +1,5 @@
-#include "data/dynamic_array.hpp"
-#include "data/board_game.hpp"
+#include "data/dynamic_array.h"
+#include "data/board_game.h"
 
 // Default constructor initializing an empty DynamicArray
 template<typename T>
@@ -71,6 +71,18 @@ void DynamicArray<T>::resize(std::size_t new_capacity) {
     capacity = new_capacity;
 }
 
+// Method to return a pointer to the first element
+template<typename T>
+const T* DynamicArray<T>::begin() const {
+    return data;
+}
+
+// Method to return a pointer to one past the last element
+template<typename T>
+const T* DynamicArray<T>::end() const {
+    return data + length;
+}
+
 // Function to check if the array is sorted
 template<typename T>
 bool isSorted(const DynamicArray<T>& data) {
@@ -88,6 +100,7 @@ template class DynamicArray<float>;
 template class DynamicArray<double>;
 template class DynamicArray<char>;
 template class DynamicArray<BoardGame>;
+template class DynamicArray<unsigned long>;
 
 template bool isSorted<int>(const DynamicArray<int>& data);
 template bool isSorted<float>(const DynamicArray<float>& data);

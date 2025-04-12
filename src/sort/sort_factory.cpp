@@ -1,4 +1,4 @@
-#include "sort/sort_factory.hpp"
+#include "sort/sort_factory.h"
 
 // Factory method to create a sorter based on the specified algorithm type
 template<typename T>
@@ -10,8 +10,11 @@ std::unique_ptr<SortAlgorithm<T>> SortFactory<T>::createSorter(SortAlgorithmType
             return std::make_unique<InsertionSort<T>>(); // Create an InsertionSort instance
         case SortAlgorithmType::QUICK:
             return std::make_unique<QuickSort<T>>(); // Create a QuickSort instance
-        case SortAlgorithmType::SHELL:
-            return std::make_unique<ShellSort<T>>(); // Create a ShellSort instance
+        case SortAlgorithmType::SHELL: {
+            DynamicArray<std::size_t> gaps;
+            gaps.push_back(1); // Default gap sequence
+            return std::make_unique<ShellSort<T>>(gaps); // Pass custom gaps
+        }
         case SortAlgorithmType::DRUNK_INSERTION:
             return std::make_unique<DrunkInsertionSort<T>>(); // Create a DrunkInsertionSort instance
         default:

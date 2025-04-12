@@ -1,8 +1,7 @@
 #include <iostream>
-#include <string>
-#include "utils/helpers.hpp"
-#include "utils/logger.hpp"
-#include "data/board_game.hpp"
+#include "utils/helpers.h"
+#include "utils/logger.h"
+#include "data/board_game.h"
 
 int main(int argc, char* argv[]) {
     Logger::log(Logger::Level::INFO, "Program started"); // Log the start of the program
@@ -18,7 +17,7 @@ int main(int argc, char* argv[]) {
         printHelp(); // Print the help message if the mode is --help
         return 0;
     } else if (mode == "--file") {
-        if (argc < 5) {
+        if (argc < 6) {
             Logger::log(Logger::Level::WARNING, "Not enough arguments for file mode"); // Log a warning if not enough arguments for file mode
             printHelp(); // Print the help message
             return 1;
@@ -26,27 +25,28 @@ int main(int argc, char* argv[]) {
 
         int algorithm = std::stoi(argv[2]); // Parse the algorithm argument
         int type = std::stoi(argv[3]); // Parse the type argument
-        std::string inputFile = argv[4]; // Get the input file name
-        std::string outputFile = (argc == 6) ? argv[5] : ""; // Get the output file name if provided
+        const char* inputFile = argv[4]; // Get the input file name
+        const char* outputFile = (argc == 6) ? argv[5] : ""; // Get the output file name if provided
+        int optional = (argc == 7) ? std::stoi(argv[6]) : 0; // Get the optional level if provided
 
         switch (type) {
             case 0:
-                handleFileMode<int>(algorithm, inputFile, outputFile); // Handle file mode for int type
+                handleFileMode<int>(algorithm, inputFile, outputFile, optional); // Handle file mode for int type
                 break;
             case 1:
-                handleFileMode<float>(algorithm, inputFile, outputFile); // Handle file mode for float type
+                handleFileMode<float>(algorithm, inputFile, outputFile, optional); // Handle file mode for float type
                 break;
             case 2:
-                handleFileMode<double>(algorithm, inputFile, outputFile); // Handle file mode for double type
+                handleFileMode<double>(algorithm, inputFile, outputFile, optional); // Handle file mode for double type
                 break;
             case 3:
-                handleFileMode<char>(algorithm, inputFile, outputFile); // Handle file mode for char type
+                handleFileMode<char>(algorithm, inputFile, outputFile, optional); // Handle file mode for char type
                 break;
             case 4:
-                handleFileMode<BoardGame>(algorithm, inputFile, outputFile); // Handle file mode for BoardGame type
+                handleFileMode<BoardGame>(algorithm, inputFile, outputFile, optional); // Handle file mode for BoardGame type
                 break;
             default:
-                Logger::log(Logger::Level::ERROR, "Unknown type: " + std::to_string(type)); // Log an error if the type is unknown
+                Logger::log(Logger::Level::ERROR, ("Unknown type: " + std::to_string(type)).c_str()); // Log an error if the type is unknown
                 std::cerr << "Unknown type: " << type << std::endl;
                 return 1;
         }
@@ -60,31 +60,32 @@ int main(int argc, char* argv[]) {
         int algorithm = std::stoi(argv[2]); // Parse the algorithm argument
         int type = std::stoi(argv[3]); // Parse the type argument
         size_t size = std::stoul(argv[4]); // Parse the size argument
-        std::string outputFile = argv[5]; // Get the output file name
+        const char* outputFile = argv[5]; // Get the output file name
+        int optional = (argc == 7) ? std::stoi(argv[6]) : 0; // Get the drunkenness level if provided
 
         switch (type) {
             case 0:
-                handleTestMode<int>(algorithm, size, outputFile); // Handle test mode for int type
+                handleTestMode<int>(algorithm, size, outputFile, optional); // Handle test mode for int type
                 break;
             case 1:
-                handleTestMode<float>(algorithm, size, outputFile); // Handle test mode for float type
+                handleTestMode<float>(algorithm, size, outputFile, optional); // Handle test mode for float type
                 break;
             case 2:
-                handleTestMode<double>(algorithm, size, outputFile); // Handle test mode for double type
+                handleTestMode<double>(algorithm, size, outputFile, optional); // Handle test mode for double type
                 break;
             case 3:
-                handleTestMode<char>(algorithm, size, outputFile); // Handle test mode for char type
+                handleTestMode<char>(algorithm, size, outputFile, optional); // Handle test mode for char type
                 break;
             case 4:
-                handleTestMode<BoardGame>(algorithm, size, outputFile); // Handle test mode for BoardGame type
+                handleTestMode<BoardGame>(algorithm, size, outputFile, optional); // Handle test mode for BoardGame type
                 break;
             default:
-                Logger::log(Logger::Level::ERROR, "Unknown type: " + std::to_string(type)); // Log an error if the type is unknown
+                Logger::log(Logger::Level::ERROR, ("Unknown type: " + std::to_string(type)).c_str()); // Log an error if the type is unknown
                 std::cerr << "Unknown type: " << type << std::endl;
                 return 1;
         }
     } else {
-        Logger::log(Logger::Level::WARNING, "Unknown mode: " + mode); // Log a warning if the mode is unknown
+        Logger::log(Logger::Level::WARNING, ("Unknown mode: " + mode).c_str()); // Log a warning if the mode is unknown
         printHelp(); // Print the help message
         return 1;
     }

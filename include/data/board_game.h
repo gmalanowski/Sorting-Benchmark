@@ -2,8 +2,8 @@
 #define PROJEKT_BOARD_GAME_HPP
 
 #include <iostream>
-#include <sstream>
-#include <string>
+#include <cstring>
+#include <algorithm>
 
 class BoardGame {
 public:
@@ -30,9 +30,11 @@ public:
 
     // Operator < for comparison
     bool operator<(const BoardGame& other) const;
+    bool operator<=(const BoardGame& other) const;
+    bool operator>(const BoardGame& other) const;
     friend std::ostream& operator<<(std::ostream& os, const BoardGame& game);
     friend std::istream& operator>>(std::istream& is, BoardGame& game);
-    std::string to_string(const BoardGame& game);
+    const char* to_string(const BoardGame& game);
 
 private:
     // Name of the board game

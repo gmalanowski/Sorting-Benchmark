@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <cstddef>
 #include <algorithm>
-#include "board_game.hpp"
+#include "board_game.h"
 
 // Template class for DynamicArray
 template<typename T>
@@ -33,6 +33,15 @@ public:
 
     // Checks if the array is empty
     bool empty() const;
+
+
+    // Methods to support range-based for loops
+
+    // Return pointer to the first element
+    const T* begin() const;
+
+    // Return pointer to one past the last element
+    const T* end() const;
 
 private:
     // Resizes the array

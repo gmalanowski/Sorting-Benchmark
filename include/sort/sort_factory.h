@@ -1,11 +1,11 @@
 #ifndef PROJEKT_SORT_FACTORY_HPP
 #define PROJEKT_SORT_FACTORY_HPP
 
-#include "heap_sort.hpp"
-#include "insertion_sort.hpp"
-#include "quick_sort.hpp"
-#include "shell_sort.hpp"
-#include "drunk_insertion_sort.hpp"
+#include "heap_sort.h"
+#include "insertion_sort.h"
+#include "quick_sort.h"
+#include "shell_sort.h"
+#include "drunk_insertion_sort.h"
 #include <memory>
 #include <stdexcept>
 

@@ -1,8 +1,8 @@
 #ifndef PROJEKT_INSERTION_SORT_HPP
 #define PROJEKT_INSERTION_SORT_HPP
 
-#include "data/dynamic_array.hpp"
-#include "sort_algorithm.hpp"
+#include "data/dynamic_array.h"
+#include "sort_algorithm.h"
 
 // Template class for InsertionSort inheriting from SortAlgorithm
 template<typename T>

@@ -1,8 +1,6 @@
 #ifndef PROJEKT_LOGGER_HPP
 #define PROJEKT_LOGGER_HPP
 
-#include <string>
-
 // Logger class for logging messages with different severity levels
 class Logger {
 public:
@@ -14,7 +12,7 @@ public:
     };
 
     // Static method to log a message with a specified log level
-    static void log(Level level, const std::string& message);
+    static void log(Level level, const char* message);
 };
 
 #endif // PROJEKT_LOGGER_HPP

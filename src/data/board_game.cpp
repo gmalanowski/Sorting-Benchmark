@@ -1,5 +1,4 @@
-#include "data/board_game.hpp"
-#include <cstring>
+#include "data/board_game.h"
 
 // Constructor initializing all fields
 BoardGame::BoardGame(const char* name, const char* publisher, int minPlayers, int maxPlayers, int playTime, int complexity, int fun)
@@ -48,12 +47,23 @@ int BoardGame::getFun() const {
 
 // Method to calculate the fun per minute per player
 double BoardGame::calculateFunPerMinutePerPlayer() const {
-    return static_cast<double>(fun) / playTime / ((minPlayers + maxPlayers) / 2.0);
+    double baseFun = static_cast<double>(fun) / playTime / ((minPlayers + maxPlayers) / 2.0);
+    int titleLength = std::strlen(name);
+    int publisherA = std::count(publisher, publisher + std::strlen(publisher), 'a');
+    return baseFun + 0.01 * titleLength + 0.05 * publisherA;
 }
 
 // Operator < for comparison
 bool BoardGame::operator<(const BoardGame& other) const {
     return fun < other.fun; // Example comparison based on fun level
+}
+
+bool BoardGame::operator<=(const BoardGame& other) const {
+    return fun <= other.fun;
+}
+
+bool BoardGame::operator>(const BoardGame& other) const {
+    return fun > other.fun;
 }
 
 std::ostream& operator<<(std::ostream& os, const BoardGame& game) {
@@ -70,11 +80,11 @@ std::istream& operator>>(std::istream& is, BoardGame& game) {
     return is;
 }
 
-std::string to_string(const BoardGame& game) {
-    std::ostringstream oss;
-    oss << "Name: " << game.getName() << ", Publisher: " << game.getPublisher()
-        << ", Min Players: " << game.getMinPlayers() << ", Max Players: " << game.getMaxPlayers()
-        << ", Play Time: " << game.getPlayTime() << ", Complexity: " << game.getComplexity()
-        << ", Fun: " << game.getFun();
-    return oss.str();
+const char* to_string(const BoardGame& game) {
+    static char buffer[256];
+    snprintf(buffer, sizeof(buffer),
+             "Name: %s, Publisher: %s, Min Players: %d, Max Players: %d, Play Time: %d, Complexity: %d, Fun: %d",
+             game.getName(), game.getPublisher(), game.getMinPlayers(), game.getMaxPlayers(),
+             game.getPlayTime(), game.getComplexity(), game.getFun());
+    return buffer;
 }

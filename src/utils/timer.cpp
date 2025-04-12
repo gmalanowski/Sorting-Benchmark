@@ -1,4 +1,4 @@
-#include "utils/timer.hpp"
+#include "utils/Timer.h"
 
 // Constructor to initialize the Timer object
 Timer::Timer() : running(false), elapsedTime(0) {}

@@ -1,10 +1,10 @@
-#include "utils/file_manager.hpp"
-#include "data/board_game.hpp"
+#include "utils/file_manager.h"
+#include "data/board_game.h"
 #include <fstream>
 
 // Template method to read data from a file into a DynamicArray
 template<typename T>
-bool FileManager::readFromFile(const std::string& filename, DynamicArray<T>& data) {
+bool FileManager::readFromFile(const char* filename, DynamicArray<T>& data) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         return false; // Return false if the file cannot be opened
@@ -25,7 +25,7 @@ bool FileManager::readFromFile(const std::string& filename, DynamicArray<T>& dat
 
 // Template method to write data from a DynamicArray to a file
 template<typename T>
-bool FileManager::writeToFile(const std::string& filename, const DynamicArray<T>& data) {
+bool FileManager::writeToFile(const char* filename, const DynamicArray<T>& data) {
     std::ofstream file(filename);
     if (!file.is_open()) {
         return false; // Return false if the file cannot be opened
@@ -41,13 +41,13 @@ bool FileManager::writeToFile(const std::string& filename, const DynamicArray<T>
 }
 
 // Explicit template instantiations for specific types
-template bool FileManager::readFromFile<int>(const std::string& filename, DynamicArray<int>& data);
-template bool FileManager::writeToFile<int>(const std::string& filename, const DynamicArray<int>& data);
-template bool FileManager::readFromFile<float>(const std::string& filename, DynamicArray<float>& data);
-template bool FileManager::writeToFile<float>(const std::string& filename, const DynamicArray<float>& data);
-template bool FileManager::readFromFile<double>(const std::string& filename, DynamicArray<double>& data);
-template bool FileManager::writeToFile<double>(const std::string& filename, const DynamicArray<double>& data);
-template bool FileManager::readFromFile<char>(const std::string& filename, DynamicArray<char>& data);
-template bool FileManager::writeToFile<char>(const std::string& filename, const DynamicArray<char>& data);
-template bool FileManager::readFromFile<BoardGame>(const std::string& filename, DynamicArray<BoardGame>& data);
-template bool FileManager::writeToFile<BoardGame>(const std::string& filename, const DynamicArray<BoardGame>& data);
+template bool FileManager::readFromFile<int>(const char* filename, DynamicArray<int>& data);
+template bool FileManager::writeToFile<int>(const char* filename, const DynamicArray<int>& data);
+template bool FileManager::readFromFile<float>(const char* filename, DynamicArray<float>& data);
+template bool FileManager::writeToFile<float>(const char* filename, const DynamicArray<float>& data);
+template bool FileManager::readFromFile<double>(const char* filename, DynamicArray<double>& data);
+template bool FileManager::writeToFile<double>(const char* filename, const DynamicArray<double>& data);
+template bool FileManager::readFromFile<char>(const char* filename, DynamicArray<char>& data);
+template bool FileManager::writeToFile<char>(const char* filename, const DynamicArray<char>& data);
+template bool FileManager::readFromFile<BoardGame>(const char* filename, DynamicArray<BoardGame>& data);
+template bool FileManager::writeToFile<BoardGame>(const char* filename, const DynamicArray<BoardGame>& data);
