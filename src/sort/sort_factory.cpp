@@ -11,9 +11,7 @@ std::unique_ptr<SortAlgorithm<T>> SortFactory<T>::createSorter(SortAlgorithmType
         case SortAlgorithmType::QUICK:
             return std::make_unique<QuickSort<T>>(); // Create a QuickSort instance
         case SortAlgorithmType::SHELL: {
-            DynamicArray<std::size_t> gaps;
-            gaps.push_back(1); // Default gap sequence
-            return std::make_unique<ShellSort<T>>(gaps); // Pass custom gaps
+            return std::make_unique<ShellSort<T>>(); // Pass custom gaps
         }
         case SortAlgorithmType::DRUNK_INSERTION:
             return std::make_unique<DrunkInsertionSort<T>>(); // Create a DrunkInsertionSort instance

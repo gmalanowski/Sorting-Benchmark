@@ -10,6 +10,8 @@
 #include "sort/drunk_insertion_sort.h"
 #include "data/board_game.h"
 #include <cstring>
+#include <cmath>
+#include <algorithm>
 #include <iostream>
 
 // Function to print the help message
@@ -72,12 +74,7 @@ void sortData(int algorithm, DynamicArray<T>& data, int optional) {
     if (algorithmType == SortAlgorithmType::DRUNK_INSERTION) {
         dynamic_cast<DrunkInsertionSort<T>*>(sorter.get())->sort(data, optional);
     } else if (algorithmType == SortAlgorithmType::SHELL) {
-        // If the algorithm is ShellSort, pass the gaps
-        DynamicArray<std::size_t> gaps;
-        for (int i = 0; i < optional; ++i) {
-            gaps.push_back(i + 1);
-        }
-        dynamic_cast<ShellSort<T>*>(sorter.get())->sort(data, gaps);
+        dynamic_cast<ShellSort<T>*>(sorter.get())->sort(data, optional);
     } else if (algorithmType == SortAlgorithmType::QUICK) {
         // If the algorithm is QuickSort, pass the pivot type
         PivotType pivotType = static_cast<PivotType>(optional);
@@ -111,22 +108,57 @@ void handleFileMode(int algorithm, const char* inputFile, const char* outputFile
         exit(1);
     }
 
-    Timer timer;
-    timer.start();
-    sortData(algorithm, *data, optional);
-    timer.stop();
+    const int iterations = 100;
+    DynamicArray<int> times;
 
-    Logger::log(Logger::Level::INFO, ("Elapsed time: " + std::to_string(timer.result()) + " ms").c_str());
-    std::cout << "Elapsed time: " << timer.result() << " ms" << std::endl;
+    for (int i = 0; i < iterations; ++i) {
+        Timer timer;
+        timer.start();
+        sortData(algorithm, *data, optional);
+        timer.stop();
 
-    if (!isSorted(*data)) {
-        Logger::log(Logger::Level::ERROR, "Sorting failed: data is not sorted correctly");
+        if (!isSorted(*data)) {
+            Logger::log(Logger::Level::ERROR, "Sorting failed: data is not sorted correctly");
+        }
+
+        times.push_back(timer.result());
+        if (outputFile && std::strlen(outputFile) > 0 && !FileManager::writeToFile(outputFile, *data)) {
+            delete data;
+            exit(1);
+        }
+
         delete data;
-        exit(1);
     }
 
-    if (outputFile && std::strlen(outputFile) > 0 && !FileManager::writeToFile(outputFile, *data)) {
-        delete data;
+    int minTime = *std::min_element(times.begin(), times.end());
+    int maxTime = *std::max_element(times.begin(), times.end());
+    double avgTime = std::accumulate(times.begin(), times.end(), 0.0) / times.size();
+
+    sortData(0, times, 0); // Sort the times for median calculation
+    double median = (times.size() % 2 == 0)
+                    ? (times[times.size() / 2 - 1] + times[times.size() / 2]) / 2.0
+                    : times[times.size() / 2];
+
+    double variance = 0.0;
+    for (const auto& time : times) {
+        variance += (time - median) * (time - median);
+    }
+    variance /= times.size();
+    double stddev = std::sqrt(variance);
+
+    char timeFileName[256];
+    std::snprintf(timeFileName, sizeof(timeFileName), "time_%s", outputFile);
+    std::ofstream file(timeFileName);
+
+    if (file.is_open()) {
+        file << "Average time: " << avgTime << " ms\n";
+        file << "Minimum time: " << minTime << " ms\n";
+        file << "Maximum time: " << maxTime << " ms\n";
+        file << "Median time: " << median << " ms\n";
+        file << "Variance: " << variance << " ms\n";
+        file << "Standard deviation: " << stddev << " ms\n";
+        file.close();
+    } else {
         exit(1);
     }
 
@@ -147,7 +179,7 @@ void handleTestMode(int algorithm, size_t size, const char* outputFile, int opti
             if constexpr (std::is_same_v<T, char>) {
                 data->push_back('a' + rand() % 26);
             } else {
-                data->push_back(static_cast<T>(rand() % 10000));
+                data->push_back(static_cast<T>(rand() % INTMAX_MAX));
             }
         }
 
@@ -158,8 +190,6 @@ void handleTestMode(int algorithm, size_t size, const char* outputFile, int opti
 
         if (!isSorted(*data)) {
             Logger::log(Logger::Level::ERROR, "Sorting failed: data is not sorted correctly");
-            delete data;
-            exit(1);
         }
 
         times.push_back(timer.result());
@@ -175,6 +205,18 @@ void handleTestMode(int algorithm, size_t size, const char* outputFile, int opti
     int maxTime = *std::max_element(times.begin(), times.end());
     double avgTime = std::accumulate(times.begin(), times.end(), 0.0) / times.size();
 
+    sortData(0, times, 0); // Sort the times for median calculation
+    double median = (times.size() % 2 == 0)
+                    ? (times[times.size() / 2 - 1] + times[times.size() / 2]) / 2.0
+                    : times[times.size() / 2];
+
+    double variance = 0.0;
+    for (const auto& time : times) {
+        variance += (time - median) * (time - median);
+    }
+    variance /= times.size();
+    double stddev = std::sqrt(variance);
+
     char timeFileName[256];
     std::snprintf(timeFileName, sizeof(timeFileName), "time_%s", outputFile);
     std::ofstream file(timeFileName);
@@ -183,6 +225,9 @@ void handleTestMode(int algorithm, size_t size, const char* outputFile, int opti
         file << "Average time: " << avgTime << " ms\n";
         file << "Minimum time: " << minTime << " ms\n";
         file << "Maximum time: " << maxTime << " ms\n";
+        file << "Median time: " << median << " ms\n";
+        file << "Variance: " << variance << " ms\n";
+        file << "Standard deviation: " << stddev << " ms\n";
         file.close();
     } else {
         exit(1);

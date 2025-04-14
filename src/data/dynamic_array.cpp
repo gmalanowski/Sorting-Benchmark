@@ -8,7 +8,10 @@ DynamicArray<T>::DynamicArray() : data(nullptr), capacity(0), length(0) {}
 // Destructor to clean up allocated memory
 template<typename T>
 DynamicArray<T>::~DynamicArray() {
-    delete[] data;
+    if(data) {
+        delete[] data;
+        data = nullptr;
+    }
 }
 
 // Method to add an element to the end of the array

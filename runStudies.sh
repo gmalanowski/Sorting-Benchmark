@@ -36,7 +36,7 @@ run_study_2() {
     for algorithm in "${!ALGORITHMS[@]}"; do
         for distribution in "${DISTRIBUTIONS[@]}"; do
             echo "Running study 2: Algorithm=${ALGORITHMS[$algorithm]}, Distribution=$distribution" | tee -a $LOG_FILE
-            $PROGRAM --test $algorithm 0 10000 "output_${ALGORITHMS[$algorithm]}_${distribution}.txt" 2>&1 | tee -a $LOG_FILE
+            $PROGRAM --file $algorithm 0 "test_cases/${distribution}.txt" "output_${ALGORITHMS[$algorithm]}_${distribution}.txt" 2>&1 | tee -a $LOG_FILE
         done
     done
 }
@@ -75,7 +75,7 @@ run_study_1_shell() {
 
 # Study 1 for QuickSort
 run_study_1_quick() {
-    for pivot in "${PIVOTS[@]}"; do
+    for pivot in 0 1 2 3; do
         for size in "${SIZES[@]}"; do
             echo "Running QuickSort with pivot=${pivot}, size=${size}" | tee -a $LOG_FILE
             $PROGRAM --test 2 0 ${size} "output_quick_${pivot}_${size}.txt" $pivot
@@ -99,9 +99,9 @@ run_study_1_quick
 
 # Analyze QuickSort results
 prepare_study_2_quick() {
-    for pivot in LEFT RIGHT MIDDLE RANDOM; do
+    for pivot in 0 1 2 3; do
       for size in "${SIZES[@]}"; do
-          time=$(grep "Average time" "time_quick_${pivot}_${size}.txt" | awk '{print $3}')
+          time=$(grep "Average time" "time_output_quick_${pivot}_${size}.txt" | awk '{print $3}')
           if (( $(echo "$time < $min_time_quick_sort" | bc -l) )); then
               min_time_quick_sort=$time
               best_quick_sort_pivot=$pivot
@@ -112,9 +112,9 @@ prepare_study_2_quick() {
 
 # Analyze ShellSort results (example for different gaps)
 prepare_study_2_shell() {
-    for gap in {1..5}; do
+    for gap in "${GAPS1[@]}" "${GAPS2[@]}"; do
         for size in "${SIZES[@]}"; do
-            time=$(grep "Average time" "output_shell_${gap}_${size}.txt" | awk '{print $3}')
+            time=$(grep "Average time" "time_output_shell_${gap}.txt" | awk '{print $3}')
             if (( $(echo "$time < $min_time_shell" | bc -l) )); then
                 min_time_shell=$time
                 best_shell_gap=$gap

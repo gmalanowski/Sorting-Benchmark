@@ -8,18 +8,9 @@
 template<typename T>
 class ShellSort : public SortAlgorithm<T> {
 public:
-    // Constructor to initialize with custom gaps
-    explicit ShellSort(const DynamicArray<std::size_t>& gaps);
-
-    // Default constructor with a fallback gap sequence
-    ShellSort();
-
     // Method to sort data
     void sort(DynamicArray<T>& data) override;
-    void sort(DynamicArray<T>& data, const DynamicArray<std::size_t>& customGaps);
-
-private:
-    DynamicArray<std::size_t> gaps; // Gap sequence for the ShellSort algorithm
+    void sort(DynamicArray<T>& data, const int customGaps);
 };
 
 #endif // PROJEKT_SHELL_SORT_HPP
