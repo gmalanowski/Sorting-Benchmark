@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
         const char* inputFile = argv[4]; // Get the input file name
         const char* outputFile = argv[5]; // Get the output file name if provided
         int optional = (argc >= 7) ? std::stoi(argv[6]) : 0; // Get the optional level if provided
-        const int iterations = (argc >= 8) ? std::stoi(argv[7]) : 100; // Get the number of interations if provited
+        const int iterations = (argc >= 8) ? std::stoi(argv[7]) : 100; // Get the number of iterations if provided
 
         switch (type) {
             case 0:
