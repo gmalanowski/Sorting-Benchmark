@@ -43,6 +43,12 @@ public:
     // Return pointer to one past the last element
     const T* end() const;
 
+    // Copy constructor
+    DynamicArray(const DynamicArray<T>& other);
+
+    // Move assignment operator
+    DynamicArray<T>& operator=(const DynamicArray<T>& other);
+
 private:
     // Resizes the array
     void resize(std::size_t new_capacity);

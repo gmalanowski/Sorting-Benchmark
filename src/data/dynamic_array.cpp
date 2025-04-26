@@ -97,6 +97,33 @@ bool isSorted(const DynamicArray<T>& data) {
     return true;
 }
 
+// Copy constructor
+template<typename T>
+DynamicArray<T>::DynamicArray(const DynamicArray<T>& other)
+        : data(nullptr), capacity(other.capacity), length(other.length) {
+    if (capacity > 0) {
+        data = new T[capacity];
+        for (std::size_t i = 0; i < length; ++i) {
+            data[i] = other.data[i];
+        }
+    }
+}
+
+// Move assignment operator
+template<typename T>
+DynamicArray<T>& DynamicArray<T>::operator=(const DynamicArray<T>& other) {
+    if (this != &other) {
+        delete[] data;
+        capacity = other.capacity;
+        length = other.length;
+        data = new T[capacity];
+        for (std::size_t i = 0; i < length; ++i) {
+            data[i] = other.data[i];
+        }
+    }
+    return *this;
+}
+
 // Explicit instantiation of DynamicArray and isSorted for specific types
 template class DynamicArray<int>;
 template class DynamicArray<float>;

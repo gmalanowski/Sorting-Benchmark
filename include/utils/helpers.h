@@ -3,6 +3,8 @@
 
 #include <numeric>
 #include <fstream>
+#include <time.h>
+#include <cstdlib>
 #include "data/dynamic_array.h"
 
 // Function to print help information
@@ -18,10 +20,10 @@ bool isSorted(const DynamicArray<T>& data);
 
 // Template function to handle file mode operations
 template <typename T>
-void handleFileMode(int algorithm, const char* inputFile, const char* outputFile, int optional = 0);
+void handleFileMode(int algorithm, const char* inputFile, const char* outputFile, int optional = 0, const int iterations = 0);
 
 // Template function to handle test mode operations
 template <typename T>
-void handleTestMode(int algorithm, size_t size, const char* outputFile, int optional = 0);
+void handleTestMode(int algorithm, size_t size, const char* outputFile, int optional = 0, const int iterations = 0);
 
 #endif // PROJEKT_HELPERS_HPP
