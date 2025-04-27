@@ -38,7 +38,13 @@ void printHelp() {
               << "HELP MODE:\n"
               << "\tUsage:\n"
               << "\t\t./sorter --help\n"
-              << "\tDisplays this help message.\n";
+              << "\tDisplays this help message.\n"
+              << "Notes:\n"
+              << "\t- Input files must have the number of elements on the first line, followed by elements line-by-line.\n"
+              << "\t- Random values are generated for testing purposes.\n"
+              << "\t- Sorting results are verified for correctness after each operation.\n"
+              << "Example:\n"
+              << "\t\t./sorter --file 0 0 input.txt output.txt 3 100\n";
 }
 
 // Template function to sort data using the specified algorithm
