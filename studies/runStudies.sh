@@ -80,7 +80,7 @@ run_study_3() {
 
 # Additional gaps for ShellSort
 GAPS1=(1 4 10)
-GAPS2=(1 3 7)
+GAPS2=(3 7)
 
 # Study 1 for DrunkInsertionSort
 run_study_1_drunk() {
@@ -101,14 +101,16 @@ run_study_2_drunk() {
 
 # Study 1 for ShellSort
 run_study_1_shell() {
-    for gaps in "${GAPS1[@]}"; do
-        echo "Running ShellSort with gaps=${gaps}" | tee -a $LOG_FILE
-        $PROGRAM --test 3 0 10000 "ShellSort_with_gaps/output_shell_${gaps}.txt" $gaps $ITERATIONS 2>&1 | tee -a $LOG_FILE
-    done
+    for size in "${SIZES[@]}"; do
+    	for gaps in "${GAPS1[@]}"; do
+        	echo "Running ShellSort with gaps=${gaps}, size=${size}" | tee -a $LOG_FILE
+        	$PROGRAM --test 3 0 ${size} "ShellSort_with_gaps/output_shell_${gaps}_${size}.txt" $gaps $ITERATIONS 2>&1 | tee -a $LOG_FILE
+    	done
 
-    for gaps in "${GAPS2[@]}"; do
-        echo "Running ShellSort with gaps=${gaps}" | tee -a $LOG_FILE
-        $PROGRAM --test 3 0 10000 "ShellSort_with_gaps/output_shell_${gaps}.txt" $gaps $ITERATIONS 2>&1 | tee -a $LOG_FILE
+    	for gaps in "${GAPS2[@]}"; do
+        	echo "Running ShellSort with gaps=${gaps}, size=${size}" | tee -a $LOG_FILE
+        	$PROGRAM --test 3 0 ${size} "ShellSort_with_gaps/output_shell_${gaps}_${size}.txt" $gaps $ITERATIONS 2>&1 | tee -a $LOG_FILE
+    	done
     done
 }
 
