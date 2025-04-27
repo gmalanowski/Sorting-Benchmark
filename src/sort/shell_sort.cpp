@@ -3,7 +3,7 @@
 // Method to sort data using ShellSort with custom gaps
 template<typename T>
 void ShellSort<T>::sort(DynamicArray<T>& data, const int customGaps) {
-    // Generate gap sequence using the Knuth formula
+    // Generate gap sequence
     DynamicArray<std::size_t> gaps;
     for (std::size_t gap = 1; gap < data.size(); gap = gap * customGaps + 1) {
         gaps.push_back(gap);
