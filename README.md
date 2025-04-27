@@ -48,5 +48,7 @@ make
 
 Uruchamianie badań:
 
+```bash
 ./studies/runStudies.sh
+```
 
