@@ -38,11 +38,11 @@ Wymagania:
 Kroki budowania:
 
 ```bash
-git clone https://github.com/TwojeRepozytorium.git
+git clone https://github.com/gmalanowski/Sorting-Benchmark.git
 cd Sorting-Benchmark-main
 mkdir build
 cd build
-cmake ..
+cmake ../CMakeLists.txt
 make
 ```
 
